@@ -678,9 +678,9 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     
     // Signal non-mining time frame to stratum pool
 
-    if (CBlockIndex * theBlock = GetPreviousBlock(*pblock, 5)) {
-       result.push_back(Pair("mining_disabled", (((pblock->GetBlockTime() - theBlock->nTime) < ((10 * 60))) || (pblock->GetBlockTime() > GetAdjustedTime()))? true : false ));
-    }
+    // if (CBlockIndex * theBlock = GetPreviousBlock(*pblock, 5)) {
+    //    result.push_back(Pair("mining_disabled", (((pblock->GetBlockTime() - theBlock->nTime) < ((10 * 60))) || (pblock->GetBlockTime() > (GetAdjustedTime() + 45)))? true : false ));
+    // }
 
     return result;
 }
