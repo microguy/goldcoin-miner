@@ -2904,7 +2904,6 @@ void QueuedBlockHandler(QueuedBlockData * data)
     boost::asio::deadline_timer timer(ioService, boost::posix_time::seconds(data->block->GetBlockTime() - (GetAdjustedTime() + 45)));
     timer.wait();
 
-
     LogPrintf("QueuedBlockHandler: waited until %d, %s\n", GetAdjustedTime(), data->block->GetHash().ToString());
     if(tip->GetBlockHash() == chainActive.Tip()->GetBlockHash())
     {
@@ -2912,8 +2911,40 @@ void QueuedBlockHandler(QueuedBlockData * data)
         {
             LogPrintf("QueuedBlock:  ProcessNewBlock: FAILED\n");
         }
+        else
+        {
+            LogPrintf("QueuedBlock:  ProcessNewBlock: ACCEPTED\n"); 
+        }
     }
     else LogPrintf("QueuedBlock:  FAILED, another block came in.");
+
+    //try to submit 180 times with 1 sec interval
+    for (unsigned int i = 1; i < 180; i++)
+    {
+        ioService.reset();
+        boost::asio::deadline_timer timer(ioService, boost::posix_time::seconds(1));
+        timer.wait();
+
+        LogPrintf("QueuedBlockHandler: waited until %d, %s\n", GetAdjustedTime(), data->block->GetHash().ToString());
+        if (tip->GetBlockHash() == chainActive.Tip()->GetBlockHash())
+        {
+            if (!ProcessNewBlock(data->pfrom, data->chainparams, data->block, false, nullptr))
+            {
+                LogPrintf("QueuedBlock:  ProcessNewBlock: FAILED\n");
+                LogPrintf("QueuedBlock:  Wait another 1 second \n");
+            }
+            else
+            {
+                LogPrintf("QueuedBlock:  ProcessNewBlock: ACCEPTED\n");
+                break;
+            }
+        }
+        else
+        {
+            LogPrintf("QueuedBlock:  FAILED, another block came in.\n");
+            break;
+        }
+    }
 
     //LOCK(cs_blockqueue);
     waitingOnBlock = false;
