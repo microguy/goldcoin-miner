@@ -3324,11 +3324,9 @@ bool ProcessNewBlock(CNode * pfrom, const CChainParams& chainparams, const std::
         bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus());
 
         // Remove 51% rule to improve mining efficiency
-        
-        /*
         if (ret)
             ret = CheckBlock51Percent(pfrom, *pblock, state, chainparams);
-        */
+        
 
         LOCK(cs_main);
 
