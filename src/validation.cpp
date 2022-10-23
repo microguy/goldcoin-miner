@@ -112,6 +112,8 @@ time_t defenseStartTime;
 bool fQueueBlocks = DEFAULT_QUEUEBLOCKS;
 int  nReportQueuedBlocks = DEFAULT_REPORTQUEUEDBLOCKS;
 
+bool waitingOnBlock = false;
+
 // Internal stuff
 namespace {
 
@@ -2871,7 +2873,7 @@ CBlockIndex * GetPreviousBlock(const CBlock& block, int64_t numBlocksBefore) {
     return cur;
 }
 
-bool waitingOnBlock = false;
+
 boost::asio::io_service ioService;
 CCriticalSection cs_blockqueue;
 QueuedBlockData * queuedBlock = nullptr;
