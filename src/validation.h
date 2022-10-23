@@ -508,6 +508,7 @@ static const int DEFAULT_REPORTQUEUEDBLOCKS = REPORT_NONE;
 
 extern bool fQueueBlocks;
 extern int  nReportQueuedBlocks;
+extern bool waitingOnBlock;
 
 
 struct QueuedBlockData {
