@@ -2921,10 +2921,10 @@ void QueuedBlockHandler(QueuedBlockData * data)
     else LogPrintf("QueuedBlock:  FAILED, another block came in.");
 
     //try to submit 18 times with 100 millisec interval
-    for (unsigned int i = 1; i < 180; i++)
+    for (unsigned int i = 1; i < 360; i++)
     {
         ioService.reset();
-        boost::asio::deadline_timer timer(ioService, boost::posix_time::milliseconds(100));
+        boost::asio::deadline_timer timer(ioService, boost::posix_time::milliseconds(50));
         timer.wait();
 
         LogPrintf("QueuedBlockHandler: waited until %d, %s\n", GetAdjustedTime(), data->block->GetHash().ToString());
